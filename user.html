@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Wrapped</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="imgs/High-Goofy.jpg" />
+  </head>
+  <body>
+    <h1 id="hlavni_nadpis">Klub Wrapped - Uživatel</h1>
+    <br />
+    <div id="user-content">
+      <p>Načítání dat uživatele...</p>
+    </div>
+    <footer>Made for Klubík 2025.</footer>
+
+    <script>
+      // URL of the JSON file with user data
+      const jsonURL = "updated_voice_data.json";
+
+      // Get the user ID from the URL query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get("id");
+      const nadpis = document.getElementById("hlavni_nadpis");
+      nadpis.textContent = `Klub Wrapped - ${userId}`;
+
+      // Function to create an HTML block for user details
+      function createUserDetailBlock(userData) {
+        const userDiv = document.createElement("div");
+        userDiv.className = "user-detail";
+
+        // Add avatar if available
+        if (userData.avatar) {
+          const avatarImg = document.createElement("img");
+          avatarImg.src = `avatars/${userData.id}.png`;
+          avatarImg.alt = `${userData.username}'s Avatar`;
+          avatarImg.width = 150;
+          avatarImg.height = 150;
+          avatarImg.style.borderRadius = "50%";
+          userDiv.appendChild(avatarImg);
+        }
+
+        // Add username
+        const userNameHeading = document.createElement("h2");
+        userNameHeading.textContent = userData.username || "Neznámý uživatel";
+        userDiv.appendChild(userNameHeading);
+
+        // Add total time
+        if (userData.total_time) {
+          const totalTime = Math.round(userData.total_time / 60);
+          const timeParagraph = document.createElement("p");
+          timeParagraph.innerHTML = `<strong id="biggerStrong">Celkový čas: ${
+            Math.round((totalTime / 60) * 100) / 100
+          } hodin</strong>`;
+          userDiv.appendChild(timeParagraph);
+        }
+
+        // Add sorted channel usage
+        if (userData.channels) {
+          const channelDiv = document.createElement("div");
+          channelDiv.innerHTML = `<strong id="biggerStrong">Kanály:</strong>`;
+          const channelList = document.createElement("ul");
+
+          // Sort channels by time spent (descending)
+          const sortedChannels = Object.entries(userData.channels).sort(
+            ([, timeA], [, timeB]) => timeB - timeA
+          );
+
+          sortedChannels.forEach(([channelName, time]) => {
+            const channelItem = document.createElement("li");
+            const time_in_minutes = Math.round(time / 60);
+            channelItem.id = "channels";
+            channelItem.textContent = `${channelName}: ${
+              Math.round((time_in_minutes / 60) * 100) / 100
+            } hodin`;
+            channelList.appendChild(channelItem);
+          });
+
+          channelDiv.appendChild(channelList);
+          userDiv.appendChild(channelDiv);
+        }
+
+        // Add sorted "with others" section
+        if (userData.with_others) {
+          const othersDiv = document.createElement("div");
+          othersDiv.innerHTML = `<strong id="biggerStrong">S ostatními:</strong>`;
+          const othersList = document.createElement("ul");
+
+          // Sort "with others" by time spent (descending)
+          const sortedWithOthers = Object.entries(userData.with_others).sort(
+            ([, timeA], [, timeB]) => timeB - timeA
+          );
+
+          let itteration = 0;
+
+          sortedWithOthers.forEach(([otherUser, time]) => {
+            const otherItem = document.createElement("li");
+            otherItem.id = "otherPeople";
+            itteration += 1;
+            const time_in_minutes = Math.round(time / 60);
+            otherItem.textContent = `${itteration}.${otherUser}: ${
+              Math.round((time_in_minutes / 60) * 100) / 100
+            } hodin`;
+            othersList.appendChild(otherItem);
+          });
+
+          othersDiv.appendChild(othersList);
+          userDiv.appendChild(othersDiv);
+        }
+
+        return userDiv;
+      }
+
+      // Function to load user data and display it
+      async function loadUserData() {
+        try {
+          const response = await fetch(jsonURL);
+          const data = await response.json();
+
+          const userContentDiv = document.getElementById("user-content");
+
+          // Clear loading text
+          userContentDiv.innerHTML = "";
+
+          // Display the selected user's data
+          if (data[userId]) {
+            const userBlock = createUserDetailBlock(data[userId]);
+            userContentDiv.appendChild(userBlock);
+          } else {
+            userContentDiv.innerHTML = `<p>Uživatel nenalezen.</p>`;
+          }
+        } catch (error) {
+          console.error("Chyba při načítání JSON dat:", error);
+          document.getElementById("user-content").innerHTML =
+            "<p>Chyba při načítání dat. Zkuste to znovu později.</p>";
+        }
+      }
+
+      // Load user data when the page loads
+      if (userId) {
+        loadUserData();
+      } else {
+        document.getElementById("user-content").innerHTML =
+          "<p>Žádné ID uživatele nebylo zadáno.</p>";
+      }
+    </script>
+  </body>
+</html>

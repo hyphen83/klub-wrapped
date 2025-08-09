@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klub wrapped</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="imgs/High-Goofy.jpg" />
+  </head>
+  <body>
+    <h1 id="hlavni_nadpis">Klub wrapped</h1>
+    <br />
+    <div id="content"></div>
+    <footer>Made for Klubík 2025.</footer>
+
+    <script>
+      // URL of the JSON file with user data
+      const jsonURL = "updated_voice_data.json";
+
+      // Function to load the JSON and display it on the page
+      async function loadJSON() {
+        try {
+          const response = await fetch(jsonURL);
+          const data = await response.json();
+          const contentDiv = document.getElementById("content");
+
+          // Check if the JSON has data for users
+          if (Object.keys(data).length === 0) {
+            contentDiv.innerHTML = "<p>No user data available.</p>";
+            return;
+          }
+
+          // Loop through each user in the JSON data
+          for (const [userName, userData] of Object.entries(data)) {
+            const userDiv = document.createElement("div");
+            userDiv.classList.add("user");
+            userDiv.id = `${userName}`;
+
+            let userContent = "";
+
+            if (userData.avatar && userData.avatar !== null) {
+              userContent = `<img id="DiscordAvatar" src="avatars/${userData.id}.png" alt="Avatar" width="50" height="50"><img id="goButton" src="imgs/goButton.png" alt="Avatar" width="50" height="50">`;
+            }
+
+            userContent += `<h2>${userName}</h2>`;
+
+            let cas_na_minuty = userData.total_time / 60;
+            let cas_zaokrouhlen = Math.round(cas_na_minuty);
+
+            // Check if 'total_time' exists and is not null
+            if (userData.total_time) {
+              userContent += `<p><strong>Celkový čas: ${cas_zaokrouhlen} minut </strong></p>`;
+            } else {
+              userContent += `<p class="no-data">Celkový čas není k dispozici.</p>`;
+            }
+
+            if (
+              userData.mfa_enabled !== undefined &&
+              userData.mfa_enabled !== null
+            ) {
+              userContent += `<p><strong>2FA Povolené: </strong>${
+                userData.mfa_enabled ? "Ano" : "Ne"
+              }</p>`;
+            }
+
+            userDiv.innerHTML = userContent;
+            contentDiv.appendChild(userDiv);
+          }
+
+          // Attach event listeners to dynamically created divs
+          attachClickHandlers();
+        } catch (error) {
+          console.error("Chyba při načítání JSON dat:", error);
+          document.getElementById("content").innerHTML =
+            "<p>Chyba při načítání uživatelských dat. Zkuste to znovu později.</p>";
+        }
+      }
+
+      // Function to attach click handlers to dynamically created divs
+      function attachClickHandlers() {
+        const divs = document.querySelectorAll(".user");
+        divs.forEach(function (div) {
+          div.addEventListener("click", function () {
+            // Get the id of the clicked div
+            const clickedId = this.id;
+            window.location.href = `user.html?id=${clickedId}`;
+            console.log(`user.html?id=${clickedId}`);
+          });
+        });
+      }
+
+      // Load the data when the page loads
+      loadJSON();
+    </script>
+  </body>
+</html>

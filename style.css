@@ -1,0 +1,180 @@
+body {
+  font-family: consolas;
+  margin: 0px;
+  color: white;
+  background: linear-gradient(270deg, #9c0099, #d90069, #9c0099, #d90069);
+  background-size: 600% 600%;
+
+  -webkit-animation: BackgroundAnimation 20s ease infinite;
+  -moz-animation: BackgroundAnimation 20s ease infinite;
+  -o-animation: BackgroundAnimation 20s ease infinite;
+  animation: BackgroundAnimation 20s ease infinite;
+}
+
+@-webkit-keyframes BackgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@-moz-keyframes BackgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 51%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@-o-keyframes BackgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 51%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes BackgroundAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 51%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+#hlavni_nadpis {
+  text-align: center;
+  font-size: xxx-large;
+}
+
+h1 {
+  color: white;
+}
+
+.user {
+  border: 1px solid #000000;
+  padding: 25px 0;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+}
+
+.user h2 {
+  margin-top: 0;
+}
+
+.user p {
+  margin: 5px 0;
+}
+
+.user .no-data {
+  color: red;
+  font-style: italic;
+}
+#DiscordAvatar {
+  border-radius: 50%;
+  width: 35%;
+  height: 35%;
+}
+#content {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 10px; /* Menší mezery mezi sloupci a řádky */
+  justify-content: center; /* Vycentrování gridu horizontálně */
+  align-items: center; /* Vycentrování gridu vertikálně */
+}
+.user {
+  margin: 10px;
+  transition: transform 0.3s ease-in-out; /* Smooth animation */
+  background-color: #d9d9d948;
+  padding: 25px;
+  text-align: center;
+}
+
+.user:hover {
+  transform: scale(1.15); /* Enlarges the button */
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+#user-content {
+  text-align: center;
+  font-size: larger;
+}
+
+ul {
+  list-style-type: none;
+  font-size: larger;
+}
+
+footer {
+  text-align: center;
+  margin-top: 150px;
+  width: auto;
+
+  background-color: rgba(0, 0, 0, 0.153);
+}
+
+#otherPeople {
+  margin: 15px;
+}
+
+#channels {
+  margin: 15px;
+}
+
+#goButton {
+  margin-left: 39%;
+  margin-bottom: 5%;
+}
+
+#biggerStrong {
+  font-size: larger;
+
+  border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+#goButton {
+  transform-origin: center;
+}
+
+#user-area:hover + #goButton {
+  transform: translateY(-20px) rotate(160deg); /* Move up and spin */
+  transition: transform 0.5s ease;
+}
